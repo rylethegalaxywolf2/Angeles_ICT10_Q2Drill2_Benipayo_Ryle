@@ -1,0 +1,398 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clubhouse | Member Directory</title>
+
+  <link rel="stylesheet" href="https://pyscript.net/releases/2025.3.1/core.css">
+  <script type="module" src="https://pyscript.net/releases/2025.3.1/core.js"></script>
+
+  <style>
+    :root {
+      --pink: #e77eae;
+      --pink-dark: #d85d9a;
+      --text: #583b4d;
+      --muted: #926d82;
+      --glass: rgba(255, 255, 255, 0.42);
+      --glass-light: rgba(255, 255, 255, 0.62);
+      --glass-border: rgba(255, 255, 255, 0.72);
+      --shadow: 0 22px 65px rgba(126, 55, 91, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 42px 22px 60px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+                   "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        linear-gradient(rgba(255, 235, 245, 0.18), rgba(224, 143, 183, 0.16)),
+        url("PINKBG.jpg") center / cover fixed;
+    }
+
+    .page {
+      width: min(900px, 100%);
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 4px 34px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 750;
+      letter-spacing: 0.12em;
+    }
+
+    .top-label {
+      padding: 8px 13px;
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.34);
+      color: #895f76;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .hero {
+      margin: 0 auto 28px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: #a45f82;
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      color: #613d52;
+      font-size: clamp(36px, 6vw, 55px);
+      font-weight: 750;
+      letter-spacing: -0.055em;
+      line-height: 1.05;
+      text-shadow: 0 2px 18px rgba(255, 255, 255, 0.5);
+    }
+
+    .subtitle {
+      margin: 12px 0 0;
+      color: #805d72;
+      font-size: 14px;
+    }
+
+    .glass-panel {
+      border: 1px solid var(--glass-border);
+      border-radius: 25px;
+      background: var(--glass);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(26px) saturate(145%);
+      -webkit-backdrop-filter: blur(26px) saturate(145%);
+    }
+
+    .form-panel {
+      margin-bottom: 20px;
+      padding: 25px;
+    }
+
+    .panel-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 19px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .small-label {
+      color: #a16c88;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      align-items: end;
+      gap: 12px;
+    }
+
+    .field label {
+      display: block;
+      margin: 0 0 7px 3px;
+      color: #805c71;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .field input {
+      width: 100%;
+      height: 46px;
+      padding: 0 15px;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 13px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.57);
+      box-shadow: inset 0 1px 3px rgba(130, 70, 100, 0.06);
+      color: var(--text);
+      font: inherit;
+      font-size: 14px;
+      transition: 0.2s ease;
+    }
+
+    .field input::placeholder {
+      color: #b18da2;
+    }
+
+    .field input:focus {
+      border-color: rgba(218, 103, 157, 0.7);
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 0 0 4px rgba(226, 126, 174, 0.15);
+    }
+
+    .add-button {
+      height: 46px;
+      padding: 0 21px;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      border-radius: 13px;
+      background: linear-gradient(135deg, #ee9bc2, #d85d9a);
+      box-shadow: 0 8px 18px rgba(198, 75, 135, 0.24),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.45);
+      color: white;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .add-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 11px 23px rgba(198, 75, 135, 0.29),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+
+    .add-button:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .message {
+      min-height: 18px;
+      margin: 11px 2px 0;
+      color: #9a4f78;
+      font-size: 12px;
+    }
+
+    .directory-panel {
+      padding: 25px;
+    }
+
+    .directory-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .directory-title h2 {
+      margin-top: 5px;
+    }
+
+    .count-pill {
+      padding: 8px 13px;
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.48);
+      color: #9c5279;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .member-box {
+      min-height: 230px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      border-radius: 17px;
+      background: rgba(255, 255, 255, 0.43);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+    }
+
+    .member-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px 22px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .member-list li {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(177, 112, 148, 0.14);
+      color: #67475a;
+      font-size: 13px;
+    }
+
+    .member-dot {
+      flex: 0 0 7px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f0a8cb, #d65b98);
+      box-shadow: 0 0 0 3px rgba(228, 137, 181, 0.13);
+    }
+
+    .empty-state {
+      padding: 58px 10px;
+      color: #9a788c;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 17px;
+      color: #926b81;
+      font-size: 11px;
+    }
+
+    @media (max-width: 650px) {
+      body {
+        padding: 25px 14px 36px;
+      }
+
+      .input-row {
+        grid-template-columns: 1fr;
+      }
+
+      .add-button {
+        width: 100%;
+      }
+
+      .form-panel,
+      .directory-panel {
+        padding: 20px;
+      }
+
+      .member-list {
+        grid-template-columns: 1fr;
+      }
+
+      .footer {
+        flex-direction: column;
+      }
+    }
+
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.88);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <header class="topbar">
+      <div class="brand">
+        <span>FORTNITE CLUB</span>
+      </div>
+      <span class="top-label">STUDENT CLUB DIRECTORY</span>
+    </header>
+
+    <section class="hero">
+      <h1>Member Directory</h1>
+      <p class="subtitle">Keep your club community organized, one member at a time.</p>
+    </section>
+
+    <section class="glass-panel form-panel">
+      <div class="panel-heading">
+        <h2>Add a club member</h2>
+        <span class="small-label">New member</span>
+      </div>
+
+      <div class="input-row">
+        <div class="field">
+          <label for="first-name">First name</label>
+          <input id="first-name" type="text" placeholder="e.g. Alex">
+        </div>
+
+        <div class="field">
+          <label for="last-name">Last name</label>
+          <input id="last-name" type="text" placeholder="e.g. Rivera">
+        </div>
+
+        <button class="add-button" id="add-member" type="button">
+          Add member <span aria-hidden="true">＋</span>
+        </button>
+      </div>
+
+      <p class="message" id="message"></p>
+    </section>
+
+    <section class="glass-panel directory-panel">
+      <div class="directory-heading">
+        <div class="directory-title">
+          <span class="small-label">Club community</span>
+          <h2>All members</h2>
+        </div>
+
+        <span class="count-pill" id="count">0 members</span>
+      </div>
+
+      <div class="member-box">
+        <ul class="member-list" id="member-list"></ul>
+
+        <div class="empty-state" id="empty-state">
+          Your member list will appear here.
+        </div>
+      </div>
+
+      <footer class="footer">
+        <span>Student club management</span>
+        <span>Clubhouse · Member records</span>
+      </footer>
+    </section>
+
+  </main>
+
+  <script type="py" src="./main.py"></script>
+</body>
+</html>
